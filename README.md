@@ -42,7 +42,7 @@ Uma aplicação web simples, porém completa, de lista de tarefas (To-Do List) c
 
 O repositório está dividido em duas pastas principais:
 
-.
+```
 ├── todo-backend/      # Código do Backend (Spring Boot)
 │   ├── src/
 │   └── pom.xml        # Ou build.gradle
@@ -50,7 +50,7 @@ O repositório está dividido em duas pastas principais:
 │   ├── index.html
 │   └── script.js
 └── README.md          # Este arquivo
-
+```
 
 ## 🚀 Como Executar o Projeto
 
