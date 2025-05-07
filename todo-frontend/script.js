@@ -6,10 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const apiUrl = 'http://localhost:8080/api/tasks';
 
-    // --- Funções da API (sem mudanças significativas, exceto talvez em updateTask) ---
 
     async function fetchTasks() {
-        // ... (código existente inalterado) ...
         try {
             const response = await fetch(apiUrl);
             if (!response.ok) {
@@ -26,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function addTask(description) {
-        // ... (código existente inalterado) ...
          try {
              const response = await fetch(apiUrl, {
                  method: 'POST',
@@ -53,15 +50,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
      async function toggleTaskCompletion(taskId, isCompleted) {
-        // ... (código existente inalterado, mas chamaremos updateTask agora) ...
-        // Em vez de um PATCH específico, vamos usar o PUT geral
-        // Buscamos a tarefa atual para obter a descrição
          try {
             const taskResponse = await fetch(`${apiUrl}/${taskId}`);
             if (!taskResponse.ok) throw new Error('Tarefa não encontrada para toggle');
             const task = await taskResponse.json();
 
-            await updateTask(taskId, task.description, isCompleted); // Chama a função de update geral
+            await updateTask(taskId, task.description, isCompleted);
          } catch (error) {
              console.error('Erro ao buscar ou atualizar status da tarefa:', error);
              alert('Não foi possível atualizar o status da tarefa.');
@@ -78,27 +72,27 @@ document.addEventListener('DOMContentLoaded', () => {
                  },
                  body: JSON.stringify({ description: newDescription, completed: isCompleted }),
              });
+
              if (!response.ok) {
                   if (response.status === 400) {
                      alert('Descrição da tarefa não pode ser vazia.');
                   } else {
                     throw new Error(`Erro HTTP: ${response.status}`);
                   }
-                  return false; // Indica falha
+                  return false; 
              }
-             // Atualiza a UI - recarregar tudo é mais simples por enquanto
+
              await fetchTasks();
-             return true; // Indica sucesso
+             return true; 
          } catch (error) {
              console.error('Erro ao atualizar tarefa:', error);
              alert('Não foi possível atualizar a tarefa.');
-             return false; // Indica falha
+             return false;
          }
      }
 
 
     async function deleteTask(taskId) {
-        // ... (código existente inalterado) ...
           if (!confirm('Tem certeza que deseja excluir esta tarefa?')) {
               return;
           }
@@ -129,7 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Funções de Manipulação do DOM ---
 
     function renderTasks(tasks) {
-        // ... (código existente inalterado no início) ...
         taskList.innerHTML = '';
          if (tasks.length === 0) {
              checkEmptyList();
@@ -137,12 +130,11 @@ document.addEventListener('DOMContentLoaded', () => {
          }
         tasks.sort((a, b) => a.id - b.id);
         tasks.forEach(task => {
-            renderTask(task); // Chama a função renderTask modificada
+            renderTask(task); 
         });
          checkEmptyList();
     }
 
-    // Função renderTask MODIFICADA para incluir botão Editar e estrutura para edição
     function renderTask(task) {
         const listItem = document.createElement('li');
         listItem.id = `task-${task.id}`;
@@ -152,14 +144,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Container para Checkbox e Descrição (ou Input de Edição)
         const contentDiv = document.createElement('div');
-        contentDiv.className = 'task-content-wrapper d-flex align-items-center flex-grow-1 me-3'; // Ocupa espaço
+        contentDiv.className = 'task-content-wrapper d-flex align-items-center flex-grow-1 me-3'; 
 
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.className = 'form-check-input me-3 task-checkbox';
         checkbox.checked = task.completed;
         checkbox.addEventListener('change', () => {
-            // Chama a função toggleTaskCompletion que agora usa o PUT geral
             toggleTaskCompletion(task.id, checkbox.checked);
         });
 
@@ -180,11 +171,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Container para os Botões de Ação
         const actionsDiv = document.createElement('div');
-        actionsDiv.className = 'task-actions flex-shrink-0'; // Não encolhe
+        actionsDiv.className = 'task-actions flex-shrink-0'; 
 
         // Botão Editar (será escondido durante a edição)
         const editButton = document.createElement('button');
-        editButton.className = 'btn btn-warning btn-sm me-1 task-edit-button'; // me-1 = margin-end 1
+        editButton.className = 'btn btn-warning btn-sm me-1 task-edit-button'; 
         editButton.innerHTML = '<i class="bi bi-pencil"></i>';
         editButton.title = 'Editar Tarefa';
         editButton.addEventListener('click', () => {
@@ -203,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Botão Salvar (inicialmente escondido)
         const saveButton = document.createElement('button');
         saveButton.className = 'btn btn-success btn-sm me-1 task-save-button d-none'; // Começa escondido
-        saveButton.innerHTML = '<i class="bi bi-check-lg"></i>'; // Ícone de Salvar
+        saveButton.innerHTML = '<i class="bi bi-check-lg"></i>'; 
         saveButton.title = 'Salvar Alterações';
         saveButton.addEventListener('click', async () => {
             await saveEdit(listItem, task, editInput);
@@ -212,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
          // Botão Cancelar (inicialmente escondido)
         const cancelButton = document.createElement('button');
         cancelButton.className = 'btn btn-secondary btn-sm task-cancel-button d-none'; // Começa escondido
-        cancelButton.innerHTML = '<i class="bi bi-x-lg"></i>'; // Ícone de Cancelar
+        cancelButton.innerHTML = '<i class="bi bi-x-lg"></i>'; 
         cancelButton.title = 'Cancelar Edição';
         cancelButton.addEventListener('click', () => {
             exitEditMode(listItem);
@@ -221,8 +212,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Adiciona botões ao div de ações
         actionsDiv.appendChild(editButton);
         actionsDiv.appendChild(deleteButton);
-        actionsDiv.appendChild(saveButton); // Adiciona escondido
-        actionsDiv.appendChild(cancelButton); // Adiciona escondido
+        actionsDiv.appendChild(saveButton); 
+        actionsDiv.appendChild(cancelButton); 
 
         // Adiciona tudo ao item da lista
         listItem.appendChild(contentDiv);
@@ -250,14 +241,13 @@ document.addEventListener('DOMContentLoaded', () => {
         listItem.querySelector('.task-description').classList.add('d-none');
         listItem.querySelector('.task-edit-button').classList.add('d-none');
         listItem.querySelector('.task-delete-button').classList.add('d-none');
-        // Não mexemos no checkbox, ele continua visível e funcional
 
         // Mostra input e botões de salvar/cancelar
         const editInput = listItem.querySelector('.task-edit-input');
         editInput.classList.remove('d-none');
-        editInput.value = listItem.dataset.originalDescription; // Garante valor original ao entrar
-        editInput.focus(); // Coloca o foco no input
-        editInput.select(); // Seleciona o texto atual
+        editInput.value = listItem.dataset.originalDescription; 
+        editInput.focus(); 
+        editInput.select(); 
         listItem.querySelector('.task-save-button').classList.remove('d-none');
         listItem.querySelector('.task-cancel-button').classList.remove('d-none');
     }
@@ -273,13 +263,6 @@ document.addEventListener('DOMContentLoaded', () => {
         listItem.querySelector('.task-description').classList.remove('d-none');
         listItem.querySelector('.task-edit-button').classList.remove('d-none');
         listItem.querySelector('.task-delete-button').classList.remove('d-none');
-
-         // Restaura a descrição original no span caso tenha sido cancelado
-         // Se salvou, a descrição já terá sido atualizada pelo fetchTasks() ou manualmente
-         // Para simplificar, podemos apenas deixar que fetchTasks() atualize.
-         // Ou podemos atualizar manualmente:
-         // const descriptionSpan = listItem.querySelector('.task-description');
-         // descriptionSpan.textContent = listItem.dataset.originalDescription; // Ou o valor salvo, se necessário
     }
 
     // Função para salvar a edição
@@ -293,22 +276,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Chama a função de update geral, passando a nova descrição e o status de completude ATUAL
         const success = await updateTask(task.id, newDescription, task.completed);
-
-        // Se o updateTask NÃO recarregar a lista inteira, precisaríamos atualizar a UI manualmente:
-        // if (success) {
-        //     listItem.querySelector('.task-description').textContent = newDescription;
-        //     listItem.dataset.originalDescription = newDescription; // Atualiza o valor guardado
-        //     exitEditMode(listItem);
-        // }
-
-        // Como updateTask está recarregando a lista (fetchTasks), não precisamos fazer nada aqui
-        // A função exitEditMode será chamada implicitamente pela nova renderização.
-        // Se o update falhar, a UI permanecerá no modo de edição (ou será recarregada com o valor antigo).
     }
 
 
     function checkEmptyList() {
-        // ... (código existente inalterado) ...
          const existingEmptyMessage = taskList.querySelector('.empty-list-message');
           if (taskList.children.length === 0 || (taskList.children.length === 1 && taskList.children[0] === loadingMessage) ) {
               if (!existingEmptyMessage && loadingMessage && loadingMessage.style.display === 'none') { // Só adiciona se não estiver carregando
@@ -329,7 +300,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Event Listeners ---
     taskForm.addEventListener('submit', async (event) => {
-        // ... (código existente inalterado) ...
          event.preventDefault();
          const description = taskDescriptionInput.value.trim();
          if (description) {
