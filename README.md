@@ -69,7 +69,7 @@ Siga os passos abaixo para configurar e rodar a aplicação localmente.
 
 1.  **Clone o Repositório:**
     ```bash
-    git clone [https://github.com/gflores22/To-Do-List.git](https://github.com/gflores22/To-Do-List.git)
+    git clone https://github.com/gflores22/To-Do-List.git
     cd To-Do-List
     ```
 
